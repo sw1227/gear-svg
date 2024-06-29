@@ -23,7 +23,6 @@ const invloluteFunc = (angle: number) => Math.tan(angle) - angle
 
 
 const App: FC = () => {
-  const SVG_MARGIN = 10
   const INVOLUTE_RESOLUTION = 20
 
   const [teethNumber, setTeethNumber] = useRecoilState(teethNumberState)
@@ -36,6 +35,11 @@ const App: FC = () => {
   const tipRadius = useRecoilValue(tipRadiusState)
   const rootRadius = useRecoilValue(rootRadiusState)
   const maxInvoluteAngle = useRecoilValue(maxInvoluteAngleState)
+
+  // Stroke width, svg margin: proportional to tip radius
+  const strokeWidthThick = tipRadius / 150
+  const strokeWidthThin = tipRadius / 300
+  const svgMargin = tipRadius / 10
 
   // svg size
   const [svgSize, setSvgSize] = useState<number>(0);
@@ -74,19 +78,21 @@ const App: FC = () => {
         <Box mt={8}>teethNumber = {teethNumber}, module = {module}, pitch diameter={pitchDiameter}, pressure angle={pressureAngleDegree}[deg] ({pressureAngle.toFixed(3)}[rad])</Box>
         <p>tip radius = {tipRadius}</p>
 
-        <Box mt={8} ref={svgContainerRef} display="flex" justifyContent="center" boxSizing='border-box'>
+        <Heading mt={4}>Rendered Gear</Heading>
+
+        <Box ref={svgContainerRef} display="flex" justifyContent="center" boxSizing='border-box'>
           {/* svg to draw a gear */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width={svgSize}
             height={svgSize}
-            viewBox={`-${tipRadius + SVG_MARGIN} -${tipRadius + SVG_MARGIN} ${(tipRadius + SVG_MARGIN) * 2} ${(tipRadius + SVG_MARGIN) * 2}`}
+            viewBox={`-${tipRadius + svgMargin} -${tipRadius + svgMargin} ${(tipRadius + svgMargin) * 2} ${(tipRadius + svgMargin) * 2}`}
           >
             {/* Circles */}
-            <circle cx="0" cy="0" r={tipRadius} fill="none" stroke="#ddd" strokeWidth={0.5} />
-            <circle cx="0" cy="0" r={pitchRadius} fill="none" stroke="#ddd" strokeWidth={0.5} />
-            <circle cx="0" cy="0" r={baseRadius} fill="none" stroke="#ddd" strokeWidth={0.5} />
-            <circle cx="0" cy="0" r={rootRadius} fill="none" stroke="#ddd" strokeWidth={0.5} />
+            <circle cx="0" cy="0" r={tipRadius} fill="none" stroke="#ddd" strokeWidth={strokeWidthThin} />
+            <circle cx="0" cy="0" r={pitchRadius} fill="none" stroke="#ddd" strokeWidth={strokeWidthThin} />
+            <circle cx="0" cy="0" r={baseRadius} fill="none" stroke="#ddd" strokeWidth={strokeWidthThin} />
+            <circle cx="0" cy="0" r={rootRadius} fill="none" stroke="#ddd" strokeWidth={strokeWidthThin} />
             {/* Involute */}
             {Array.from({ length: teethNumber }, (_, i) => {
               const offsetAngle = 2 * Math.PI * i / teethNumber
@@ -99,7 +105,7 @@ const App: FC = () => {
                     x2={baseRadius * Math.cos(offsetAngle)}
                     y2={baseRadius * Math.sin(offsetAngle)}
                     stroke="teal"
-                    strokeWidth={1}
+                    strokeWidth={strokeWidthThick}
                     key={`root_${i}`}
                   />
                   {/* involute */}
@@ -114,7 +120,7 @@ const App: FC = () => {
                           x2={baseRadius * (Math.cos(nextAngle + offsetAngle) + nextAngle * Math.sin(nextAngle + offsetAngle))}
                           y2={baseRadius * (Math.sin(nextAngle + offsetAngle) - nextAngle * Math.cos(nextAngle + offsetAngle))}
                           stroke="teal"
-                          strokeWidth={1}
+                          strokeWidth={strokeWidthThick}
                           key={`involute_${i}_${j}`}
                         />
                       )
@@ -135,7 +141,7 @@ const App: FC = () => {
                     x2={baseRadius * Math.cos(offsetAngle)}
                     y2={baseRadius * Math.sin(offsetAngle)}
                     stroke="teal"
-                    strokeWidth={1}
+                    strokeWidth={strokeWidthThick}
                     key={`root_${i}`}
                   />
                   {/* involute */}
@@ -150,7 +156,7 @@ const App: FC = () => {
                           x2={baseRadius * (Math.cos(offsetAngle - nextAngle) - nextAngle * Math.sin(offsetAngle - nextAngle))}
                           y2={baseRadius * (Math.sin(offsetAngle - nextAngle) + nextAngle * Math.cos(offsetAngle - nextAngle))}
                           stroke="teal"
-                          strokeWidth={1}
+                          strokeWidth={strokeWidthThick}
                           key={`involute_${i}_${j}`}
                         />
                       )
