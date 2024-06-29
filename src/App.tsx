@@ -11,15 +11,25 @@ import {
   pressureAngleDegreeState,
   pitchDiameterState,
   pressureAngleState,
+  pitchRadiusState,
+  baseRadiusState,
+  tipRadiusState,
+  rootRadiusState,
 } from './recoil'
 
 
 const App: FC = () => {
+  const SVG_MARGIN = 10
+
   const [teethNumber, setTeethNumber] = useRecoilState(teethNumberState)
   const [module, setModule] = useRecoilState(moduleState)
   const [pressureAngleDegree, setPressureAngleDegree] = useRecoilState(pressureAngleDegreeState)
   const pitchDiameter = useRecoilValue(pitchDiameterState)
   const pressureAngle = useRecoilValue(pressureAngleState)
+  const pitchRadius = useRecoilValue(pitchRadiusState)
+  const baseRadius = useRecoilValue(baseRadiusState)
+  const tipRadius = useRecoilValue(tipRadiusState)
+  const rootRadius = useRecoilValue(rootRadiusState)
 
   // svg size
   const [svgSize, setSvgSize] = useState<number>(0);
@@ -56,11 +66,20 @@ const App: FC = () => {
         </VStack>
 
         <Box mt={8}>teethNumber = {teethNumber}, module = {module}, pitch diameter={pitchDiameter}, pressure angle={pressureAngleDegree}[deg] ({pressureAngle.toFixed(3)}[rad])</Box>
+        <p>tip radius = {tipRadius}</p>
 
         <Box mt={8} ref={svgContainerRef} display="flex" justifyContent="center" boxSizing='border-box'>
-          {/* TODO: 歯車の収まるviewBoxを設定 */}
-          <svg xmlns="http://www.w3.org/2000/svg" width={svgSize} height={svgSize} viewBox="-50 -50 100 100">
-            <circle cx="0" cy="0" r="50" fill="none" stroke="blue" />
+          {/* svg to draw a gear */}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width={svgSize}
+            height={svgSize}
+            viewBox={`-${tipRadius + SVG_MARGIN} -${tipRadius + SVG_MARGIN} ${(tipRadius + SVG_MARGIN) * 2} ${(tipRadius + SVG_MARGIN) * 2}`}
+          >
+            <circle cx="0" cy="0" r={tipRadius} fill="none" stroke="#ddd" strokeWidth={0.5} />
+            <circle cx="0" cy="0" r={pitchRadius} fill="none" stroke="#ddd" strokeWidth={0.5} />
+            <circle cx="0" cy="0" r={baseRadius} fill="none" stroke="#ddd" strokeWidth={0.5} />
+            <circle cx="0" cy="0" r={rootRadius} fill="none" stroke="#ddd" strokeWidth={0.5} />
           </svg>
         </Box>
       </Box>
