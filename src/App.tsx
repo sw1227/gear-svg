@@ -4,9 +4,11 @@ import './App.css'
 import { Box, Heading, VStack } from '@chakra-ui/react'
 import TeethNumberForm from './components/TeethNumberForm.tsx'
 import ModuleForm from './components/ModuleForm.tsx'
+import PressureAngleForm from './components/PressureAngleForm.tsx'
 import {
   teethNumberState,
   moduleState,
+  pressureAngleDegreeState,
   pitchDiameterState,
 } from './recoil'
 
@@ -14,6 +16,7 @@ import {
 const App: FC = () => {
   const [teethNumber, setTeethNumber] = useRecoilState(teethNumberState)
   const [module, setModule] = useRecoilState(moduleState)
+  const [pressureAngleDegree, setPressureAngleDegree] = useRecoilState(pressureAngleDegreeState)
   const pitchDiameter = useRecoilValue(pitchDiameterState)
 
   const handleTeethChange = (val: number) => {
@@ -21,6 +24,9 @@ const App: FC = () => {
   }
   const handleModuleChange = (val: number) => {
     setModule(val)
+  }
+  const handlePressureAngleChange = (val: number) => {
+    setPressureAngleDegree(val)
   }
 
   return (
@@ -32,9 +38,11 @@ const App: FC = () => {
           <TeethNumberForm teethValue={teethNumber} onChange={handleTeethChange} />
           {/* Module [mm] */}
           <ModuleForm moduleValue={module} onChange={handleModuleChange} />
+          {/* Pressure angle [deg] */}
+          <PressureAngleForm pressureAngleValue={pressureAngleDegree} onChange={handlePressureAngleChange} />
         </VStack>
 
-        <Box mt={8}>teethNumber = {teethNumber}, module = {module}, pitch diameter={pitchDiameter}</Box>
+        <Box mt={8}>teethNumber = {teethNumber}, module = {module}, pitch diameter={pitchDiameter}, pressure angle={pressureAngleDegree}</Box>
       </Box>
     </>
   )
