@@ -10,6 +10,7 @@ import {
   moduleState,
   pressureAngleDegreeState,
   pitchDiameterState,
+  pressureAngleState,
 } from './recoil'
 
 
@@ -18,16 +19,7 @@ const App: FC = () => {
   const [module, setModule] = useRecoilState(moduleState)
   const [pressureAngleDegree, setPressureAngleDegree] = useRecoilState(pressureAngleDegreeState)
   const pitchDiameter = useRecoilValue(pitchDiameterState)
-
-  const handleTeethChange = (val: number) => {
-    setTeethNumber(val)
-  }
-  const handleModuleChange = (val: number) => {
-    setModule(val)
-  }
-  const handlePressureAngleChange = (val: number) => {
-    setPressureAngleDegree(val)
-  }
+  const pressureAngle = useRecoilValue(pressureAngleState)
 
   return (
     <>
@@ -35,14 +27,14 @@ const App: FC = () => {
         <Heading mb={4}>Parameters</Heading>
         <VStack spacing={4}>
           {/* Number of teeth */}
-          <TeethNumberForm teethValue={teethNumber} onChange={handleTeethChange} />
+          <TeethNumberForm teethValue={teethNumber} onChange={setTeethNumber} />
           {/* Module [mm] */}
-          <ModuleForm moduleValue={module} onChange={handleModuleChange} />
+          <ModuleForm moduleValue={module} onChange={setModule} />
           {/* Pressure angle [deg] */}
-          <PressureAngleForm pressureAngleValue={pressureAngleDegree} onChange={handlePressureAngleChange} />
+          <PressureAngleForm pressureAngleValue={pressureAngleDegree} onChange={setPressureAngleDegree} />
         </VStack>
 
-        <Box mt={8}>teethNumber = {teethNumber}, module = {module}, pitch diameter={pitchDiameter}, pressure angle={pressureAngleDegree}</Box>
+        <Box mt={8}>teethNumber = {teethNumber}, module = {module}, pitch diameter={pitchDiameter}, pressure angle={pressureAngleDegree}[deg] ({pressureAngle.toFixed(3)}[rad])</Box>
       </Box>
     </>
   )
