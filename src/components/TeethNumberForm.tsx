@@ -12,14 +12,20 @@ import {
 
 interface TeethNumberFormProps {
   onChange: (val: number) => void
+  teethValue?: number
 }
 
-const TeethNumberForm: FC<TeethNumberFormProps> = ({ onChange }) => {
+const TeethNumberForm: FC<TeethNumberFormProps> = ({ onChange, teethValue }) => {
   return (
     <FormControl id="teeth">
       <HStack spacing={4} align="center">
         <FormLabel width="full">歯数</FormLabel>
-        <NumberInput defaultValue={12} min={3} onChange={(_, val) => onChange(val)}>
+        <NumberInput
+          defaultValue={12}
+          min={3}
+          value={teethValue}
+          onChange={(_, val) => onChange(val)}
+        >
           <NumberInputField />
           <NumberInputStepper>
             <NumberIncrementStepper />
