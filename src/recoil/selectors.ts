@@ -53,3 +53,13 @@ export const rootRadiusState = selector<number>({
     return get(pitchRadiusState) - 1.25 * get(moduleState)
   }
 })
+
+// Maximum angle of involute curve (at tip circle) [rad]
+export const maxInvoluteAngleState = selector<number>({
+  key: 'maxInvoluteAngleState',
+  get: ({ get }) => {
+    const tipRadius = get(tipRadiusState)
+    const baseRadius = get(baseRadiusState)
+    return Math.sqrt(tipRadius ** 2 - baseRadius ** 2) / baseRadius
+  }
+})

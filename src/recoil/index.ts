@@ -6,4 +6,5 @@ export {
   baseRadiusState,
   tipRadiusState,
   rootRadiusState,
+  maxInvoluteAngleState,
 } from './selectors'
