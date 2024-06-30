@@ -120,6 +120,12 @@ const App: FC = () => {
             {Array.from({ length: teethNumber }, (_, i) => {
               const offsetAngle = 2 * i * Math.PI / teethNumber
               const offsetAngle2 = (2 * i + 1) * Math.PI / teethNumber + 2 * invloluteFunc(pressureAngle)
+              const tip = {
+                x1: baseRadius * (Math.cos(maxInvoluteAngle + offsetAngle) + maxInvoluteAngle * Math.sin(maxInvoluteAngle + offsetAngle)),
+                y1: baseRadius * (Math.sin(maxInvoluteAngle + offsetAngle) - maxInvoluteAngle * Math.cos(maxInvoluteAngle + offsetAngle)),
+                x2: baseRadius * (Math.cos(offsetAngle2 - maxInvoluteAngle) - maxInvoluteAngle * Math.sin(offsetAngle2 - maxInvoluteAngle)),
+                y2: baseRadius * (Math.sin(offsetAngle2 - maxInvoluteAngle) + maxInvoluteAngle * Math.cos(offsetAngle2 - maxInvoluteAngle)),
+              }
               return (
                 <g>
                   {/* root */}
@@ -140,6 +146,12 @@ const App: FC = () => {
                     stroke="teal"
                     strokeWidth={strokeWidthThick}
                     key={`root_${i}`}
+                  />
+                  {/* tip arc */}
+                  <path
+                    d={`M ${tip.x1},${tip.y1} A ${tipRadius},${tipRadius} 0 0,1 ${tip.x2},${tip.y2}`}
+                    stroke="teal"
+                    strokeWidth={strokeWidthThick}
                   />
                   {/* involute */}
                   {
