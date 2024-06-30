@@ -1,4 +1,9 @@
-export { moduleState, teethNumberState, pressureAngleDegreeState } from './atoms'
+export {
+  moduleState,
+  teethNumberState,
+  pressureAngleDegreeState,
+  holeDiameterState,
+} from './atoms'
 export {
   pressureAngleState,
   pitchDiameterState,

@@ -14,3 +14,8 @@ export const pressureAngleDegreeState = atom<number>({
   key: 'pressureAngleDegreeState',
   default: 20
 })
+
+export const holeDiameterState = atom<number | null>({
+  key: 'holeDiameterState',
+  default: null // null means no hole
+})

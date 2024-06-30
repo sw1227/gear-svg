@@ -5,10 +5,12 @@ import { Box, Button, Heading, VStack } from '@chakra-ui/react'
 import TeethNumberForm from './components/TeethNumberForm.tsx'
 import ModuleForm from './components/ModuleForm.tsx'
 import PressureAngleForm from './components/PressureAngleForm.tsx'
+import HoleDiameterForm from './components/HoleDiameterForm.tsx'
 import {
   teethNumberState,
   moduleState,
   pressureAngleDegreeState,
+  holeDiameterState,
   pitchDiameterState,
   pressureAngleState,
   pitchRadiusState,
@@ -28,6 +30,7 @@ const App: FC = () => {
   const [teethNumber, setTeethNumber] = useRecoilState(teethNumberState)
   const [module, setModule] = useRecoilState(moduleState)
   const [pressureAngleDegree, setPressureAngleDegree] = useRecoilState(pressureAngleDegreeState)
+  const [holeDiameter, setHoleDiameter] = useRecoilState(holeDiameterState)
   const pitchDiameter = useRecoilValue(pitchDiameterState)
   const pressureAngle = useRecoilValue(pressureAngleState)
   const pitchRadius = useRecoilValue(pitchRadiusState)
@@ -94,6 +97,11 @@ const App: FC = () => {
           <PressureAngleForm pressureAngleValue={pressureAngleDegree} onChange={setPressureAngleDegree} />
         </VStack>
 
+        <Heading mt={8}>Options</Heading>
+        <VStack spacing={4}>
+          <HoleDiameterForm onChange={setHoleDiameter}/>
+        </VStack>
+
         <Box mt={8}>teethNumber = {teethNumber}, module = {module}, pitch diameter={pitchDiameter}, pressure angle={pressureAngleDegree}[deg] ({pressureAngle.toFixed(3)}[rad])</Box>
         <p>tip radius = {tipRadius}</p>
 
@@ -116,6 +124,7 @@ const App: FC = () => {
             <circle cx="0" cy="0" r={pitchRadius} fill="none" stroke="#ddd" strokeWidth={strokeWidthThin} />
             <circle cx="0" cy="0" r={baseRadius} fill="none" stroke="#ddd" strokeWidth={strokeWidthThin} />
             <circle cx="0" cy="0" r={rootRadius} fill="none" stroke="#ddd" strokeWidth={strokeWidthThin} />
+            {holeDiameter && <circle cx="0" cy="0" r={holeDiameter / 2} fill="none" stroke="teal" strokeWidth={strokeWidthThick} />}
             {/* Involute */}
             {Array.from({ length: teethNumber }, (_, i) => {
               const offsetAngle = 2 * i * Math.PI / teethNumber
@@ -133,7 +142,7 @@ const App: FC = () => {
                 y2: rootRadius * Math.sin(2 * (i + 1) * Math.PI / teethNumber),
               }
               return (
-                <g>
+                <g key={`g_${i}`}>
                   {/* root */}
                   <line
                     x1={rootRadius * Math.cos(offsetAngle)}
@@ -151,7 +160,7 @@ const App: FC = () => {
                     y2={baseRadius * Math.sin(offsetAngle2)}
                     stroke="teal"
                     strokeWidth={strokeWidthThick}
-                    key={`root_${i}`}
+                    key={`root_2_${i}`}
                   />
                   {/* tip arc */}
                   <path
