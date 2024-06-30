@@ -1,7 +1,7 @@
 import { FC, useState, useEffect, useRef } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import './App.css'
-import { Box, Heading, VStack } from '@chakra-ui/react'
+import { Box, Button, Heading, VStack } from '@chakra-ui/react'
 import TeethNumberForm from './components/TeethNumberForm.tsx'
 import ModuleForm from './components/ModuleForm.tsx'
 import PressureAngleForm from './components/PressureAngleForm.tsx'
@@ -62,6 +62,25 @@ const App: FC = () => {
     };
   }, []);
 
+  // For svg download
+  const svgRef = useRef(null)
+  const handleDownload = () => {
+    const svgElement = svgRef.current
+    if (!svgElement) return
+    const serializer = new XMLSerializer()
+    const svgString = serializer.serializeToString(svgElement)
+    const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'image.svg'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  };
+
   return (
     <>
       <Box p={4}>
@@ -80,9 +99,13 @@ const App: FC = () => {
 
         <Heading mt={4}>Rendered Gear</Heading>
 
+        {/* Download button */}
+        <Button onClick={handleDownload}>Download SVG</Button>
+
         <Box ref={svgContainerRef} display="flex" justifyContent="center" boxSizing='border-box'>
           {/* svg to draw a gear */}
           <svg
+            ref={svgRef}
             xmlns="http://www.w3.org/2000/svg"
             width={svgSize}
             height={svgSize}
