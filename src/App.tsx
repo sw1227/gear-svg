@@ -126,6 +126,12 @@ const App: FC = () => {
                 x2: baseRadius * (Math.cos(offsetAngle2 - maxInvoluteAngle) - maxInvoluteAngle * Math.sin(offsetAngle2 - maxInvoluteAngle)),
                 y2: baseRadius * (Math.sin(offsetAngle2 - maxInvoluteAngle) + maxInvoluteAngle * Math.cos(offsetAngle2 - maxInvoluteAngle)),
               }
+              const root = {
+                x1: rootRadius * Math.cos(offsetAngle2),
+                y1: rootRadius * Math.sin(offsetAngle2),
+                x2: rootRadius * Math.cos(2 * (i + 1) * Math.PI / teethNumber),
+                y2: rootRadius * Math.sin(2 * (i + 1) * Math.PI / teethNumber),
+              }
               return (
                 <g>
                   {/* root */}
@@ -152,6 +158,14 @@ const App: FC = () => {
                     d={`M ${tip.x1},${tip.y1} A ${tipRadius},${tipRadius} 0 0,1 ${tip.x2},${tip.y2}`}
                     stroke="teal"
                     strokeWidth={strokeWidthThick}
+                    fill="none"
+                  />
+                  {/* root arc */}
+                  <path
+                    d={`M ${root.x1},${root.y1} A ${rootRadius},${rootRadius} 0 0,1 ${root.x2},${root.y2}`}
+                    stroke="teal"
+                    strokeWidth={strokeWidthThick}
+                    fill="none"
                   />
                   {/* involute */}
                   {
