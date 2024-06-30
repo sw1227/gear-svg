@@ -118,7 +118,8 @@ const App: FC = () => {
             <circle cx="0" cy="0" r={rootRadius} fill="none" stroke="#ddd" strokeWidth={strokeWidthThin} />
             {/* Involute */}
             {Array.from({ length: teethNumber }, (_, i) => {
-              const offsetAngle = 2 * Math.PI * i / teethNumber
+              const offsetAngle = 2 * i * Math.PI / teethNumber
+              const offsetAngle2 = (2 * i + 1) * Math.PI / teethNumber + 2 * invloluteFunc(pressureAngle)
               return (
                 <g>
                   {/* root */}
@@ -127,6 +128,15 @@ const App: FC = () => {
                     y1={rootRadius * Math.sin(offsetAngle)}
                     x2={baseRadius * Math.cos(offsetAngle)}
                     y2={baseRadius * Math.sin(offsetAngle)}
+                    stroke="teal"
+                    strokeWidth={strokeWidthThick}
+                    key={`root_${i}`}
+                  />
+                  <line
+                    x1={rootRadius * Math.cos(offsetAngle2)}
+                    y1={rootRadius * Math.sin(offsetAngle2)}
+                    x2={baseRadius * Math.cos(offsetAngle2)}
+                    y2={baseRadius * Math.sin(offsetAngle2)}
                     stroke="teal"
                     strokeWidth={strokeWidthThick}
                     key={`root_${i}`}
@@ -149,35 +159,17 @@ const App: FC = () => {
                       )
                     })
                   }
-                </g>
-              )
-            })}
-            {/* Involute (another side) */}
-            {Array.from({ length: teethNumber }, (_, i) => {
-              const offsetAngle = Math.PI * (2 * i + 1) / teethNumber + 2 * invloluteFunc(pressureAngle)
-              return (
-                <g>
-                  {/* root */}
-                  <line
-                    x1={rootRadius * Math.cos(offsetAngle)}
-                    y1={rootRadius * Math.sin(offsetAngle)}
-                    x2={baseRadius * Math.cos(offsetAngle)}
-                    y2={baseRadius * Math.sin(offsetAngle)}
-                    stroke="teal"
-                    strokeWidth={strokeWidthThick}
-                    key={`root_${i}`}
-                  />
-                  {/* involute */}
+                  {/* Involute (another side) */}
                   {
                     Array.from({ length: INVOLUTE_RESOLUTION }, (_, j) => {
                       const angle = j * maxInvoluteAngle / INVOLUTE_RESOLUTION
                       const nextAngle = (j + 1) * maxInvoluteAngle / INVOLUTE_RESOLUTION
                       return (
                         <line
-                          x1={baseRadius * (Math.cos(offsetAngle - angle) - angle * Math.sin(offsetAngle - angle))}
-                          y1={baseRadius * (Math.sin(offsetAngle - angle) + angle * Math.cos(offsetAngle - angle))}
-                          x2={baseRadius * (Math.cos(offsetAngle - nextAngle) - nextAngle * Math.sin(offsetAngle - nextAngle))}
-                          y2={baseRadius * (Math.sin(offsetAngle - nextAngle) + nextAngle * Math.cos(offsetAngle - nextAngle))}
+                          x1={baseRadius * (Math.cos(offsetAngle2 - angle) - angle * Math.sin(offsetAngle2 - angle))}
+                          y1={baseRadius * (Math.sin(offsetAngle2 - angle) + angle * Math.cos(offsetAngle2 - angle))}
+                          x2={baseRadius * (Math.cos(offsetAngle2 - nextAngle) - nextAngle * Math.sin(offsetAngle2 - nextAngle))}
+                          y2={baseRadius * (Math.sin(offsetAngle2 - nextAngle) + nextAngle * Math.cos(offsetAngle2 - nextAngle))}
                           stroke="teal"
                           strokeWidth={strokeWidthThick}
                           key={`involute_${i}_${j}`}
