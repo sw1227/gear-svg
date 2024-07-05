@@ -1,7 +1,7 @@
 import { FC, useState, useEffect, useRef } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import './App.css'
-import { Box, Button, Heading, VStack } from '@chakra-ui/react'
+import { Box, Button, Heading, VStack, Text } from '@chakra-ui/react'
 import TeethNumberForm from './components/TeethNumberForm.tsx'
 import ModuleForm from './components/ModuleForm.tsx'
 import PressureAngleForm from './components/PressureAngleForm.tsx'
@@ -107,14 +107,17 @@ const App: FC = () => {
           <VisibilityForm visibilityValue={showCircle} onChange={setShowCircle} />
         </VStack>
 
-        <Box mt={8}>teethNumber = {teethNumber}, module = {module}, pitch diameter={pitchDiameter}, pressure angle={pressureAngleDegree}[deg] ({pressureAngle.toFixed(3)}[rad])</Box>
-        <p>tip radius = {tipRadius}</p>
-        <p>showCircle {showCircle}</p>
-
         <Heading mt={4}>Rendered Gear</Heading>
 
+        <Box mt={4}>
+          <VStack spacing={2}>
+            <Text>歯先直径 = {2 * tipRadius} [mm]</Text>
+            <Text>ピッチ円直径 = {pitchDiameter} [mm]</Text>
+          </VStack>
+        </Box>
+
         {/* Download button */}
-        <Button onClick={handleDownload}>Download SVG</Button>
+        <Button onClick={handleDownload} mt={4}>Download SVG</Button>
 
         <Box ref={svgContainerRef} display="flex" justifyContent="center" boxSizing='border-box'>
           {/* svg to draw a gear */}
