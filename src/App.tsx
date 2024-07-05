@@ -6,6 +6,7 @@ import TeethNumberForm from './components/TeethNumberForm.tsx'
 import ModuleForm from './components/ModuleForm.tsx'
 import PressureAngleForm from './components/PressureAngleForm.tsx'
 import HoleDiameterForm from './components/HoleDiameterForm.tsx'
+import VisibilityForm from './components/VisibilityForm.tsx'
 import {
   teethNumberState,
   moduleState,
@@ -43,6 +44,9 @@ const App: FC = () => {
   const strokeWidthThick = tipRadius / 150
   const strokeWidthThin = tipRadius / 300
   const svgMargin = tipRadius / 10
+
+  // Circle visibility
+  const [showCircle, setShowCircle] = useState<boolean>(true)
 
   // svg size
   const [svgSize, setSvgSize] = useState<number>(0);
@@ -100,10 +104,12 @@ const App: FC = () => {
         <Heading mt={8}>Options</Heading>
         <VStack spacing={4}>
           <HoleDiameterForm onChange={setHoleDiameter}/>
+          <VisibilityForm visibilityValue={showCircle} onChange={setShowCircle} />
         </VStack>
 
         <Box mt={8}>teethNumber = {teethNumber}, module = {module}, pitch diameter={pitchDiameter}, pressure angle={pressureAngleDegree}[deg] ({pressureAngle.toFixed(3)}[rad])</Box>
         <p>tip radius = {tipRadius}</p>
+        <p>showCircle {showCircle}</p>
 
         <Heading mt={4}>Rendered Gear</Heading>
 
@@ -120,10 +126,15 @@ const App: FC = () => {
             viewBox={`-${tipRadius + svgMargin} -${tipRadius + svgMargin} ${(tipRadius + svgMargin) * 2} ${(tipRadius + svgMargin) * 2}`}
           >
             {/* Circles */}
-            <circle cx="0" cy="0" r={tipRadius} fill="none" stroke="#ddd" strokeWidth={strokeWidthThin} />
-            <circle cx="0" cy="0" r={pitchRadius} fill="none" stroke="#ddd" strokeWidth={strokeWidthThin} />
-            <circle cx="0" cy="0" r={baseRadius} fill="none" stroke="#ddd" strokeWidth={strokeWidthThin} />
-            <circle cx="0" cy="0" r={rootRadius} fill="none" stroke="#ddd" strokeWidth={strokeWidthThin} />
+            {showCircle && (
+              <g>
+                <circle cx="0" cy="0" r={tipRadius} fill="none" stroke="#ddd" strokeWidth={strokeWidthThin} />
+                <circle cx="0" cy="0" r={pitchRadius} fill="none" stroke="#ddd" strokeWidth={strokeWidthThin} />
+                <circle cx="0" cy="0" r={baseRadius} fill="none" stroke="#ddd" strokeWidth={strokeWidthThin} />
+                <circle cx="0" cy="0" r={rootRadius} fill="none" stroke="#ddd" strokeWidth={strokeWidthThin} />
+              </g>
+            )}
+            {/* Hole */}
             {holeDiameter && <circle cx="0" cy="0" r={holeDiameter / 2} fill="none" stroke="teal" strokeWidth={strokeWidthThick} />}
             {/* Involute */}
             {Array.from({ length: teethNumber }, (_, i) => {
