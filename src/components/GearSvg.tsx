@@ -11,6 +11,7 @@ import {
   maxInvoluteAngleState,
   cutoutTypeState,
   cutoutCircleParamsState,
+  cutoutSpokeParamsState,
 } from '../recoil'
 
 // Involute function (angle: radian)
@@ -27,6 +28,7 @@ const GearSvg: FC<GearSvgProps> = ({ showCircle }) => {
   const [holeDiameter] = useRecoilState(holeDiameterState)
   const [cutoutType] = useRecoilState(cutoutTypeState)
   const [cutoutCircleParams] = useRecoilState(cutoutCircleParamsState)
+  const [cutoutSpokeParams] = useRecoilState(cutoutSpokeParamsState)
   const pressureAngle = useRecoilValue(pressureAngleState)
   const pitchRadius = useRecoilValue(pitchRadiusState)
   const baseRadius = useRecoilValue(baseRadiusState)
@@ -40,6 +42,13 @@ const GearSvg: FC<GearSvgProps> = ({ showCircle }) => {
     param.diameter !== null &&
     param.count !== null &&
     param.distance !== null
+  )
+  const isCutoutSpokeParamsNonNull = (
+    param: { count: number | null, innerRadius: number | null, outerRadius: number | null }
+  ): param is { count: number, innerRadius: number, outerRadius: number } => (
+    param.count !== null &&
+    param.innerRadius !== null &&
+    param.outerRadius !== null
   )
 
   // Stroke width: proportional to tip radius
@@ -73,6 +82,67 @@ const GearSvg: FC<GearSvgProps> = ({ showCircle }) => {
               stroke='teal'
               strokeWidth={strokeWidthThick}
             />
+          )
+        })
+      )}
+      {/* Spoke */}
+      {cutoutType === 'Spoke' && isCutoutSpokeParamsNonNull(cutoutSpokeParams) && (
+        Array.from({ length: cutoutSpokeParams.count }, (_, i) => {
+          const angle1 = 2 * i * Math.PI / cutoutSpokeParams.count
+          const angle2 = 2 * (i + 1) * Math.PI / cutoutSpokeParams.count
+          const dAngle = (angle2 - angle1) * (1 - cutoutSpokeParams.ratio) / 2
+
+          const inner = {
+            start: {
+              x: cutoutSpokeParams.innerRadius * Math.cos(angle1 + dAngle),
+              y: cutoutSpokeParams.innerRadius * Math.sin(angle1 + dAngle),
+            },
+            end: {
+              x: cutoutSpokeParams.innerRadius * Math.cos(angle2 - dAngle),
+              y: cutoutSpokeParams.innerRadius * Math.sin(angle2 - dAngle),
+            }
+          }
+          const outer = {
+            start: {
+              x: cutoutSpokeParams.outerRadius * Math.cos(angle1 + dAngle),
+              y: cutoutSpokeParams.outerRadius * Math.sin(angle1 + dAngle),
+            },
+            end: {
+              x: cutoutSpokeParams.outerRadius * Math.cos(angle2 - dAngle),
+              y: cutoutSpokeParams.outerRadius * Math.sin(angle2 - dAngle),
+            }
+          }
+          return (
+            <g key={`cutout_spoke_${i}`}>
+              <path
+                d={`M ${inner.start.x},${inner.start.y} A ${cutoutSpokeParams.innerRadius},${cutoutSpokeParams.innerRadius} 0 0,1 ${inner.end.x},${inner.end.y}`}
+                stroke='teal'
+                strokeWidth={strokeWidthThick}
+                fill='none'
+              />
+              <path
+                d={`M ${outer.start.x},${outer.start.y} A ${cutoutSpokeParams.outerRadius},${cutoutSpokeParams.outerRadius} 0 0,1 ${outer.end.x},${outer.end.y}`}
+                stroke='teal'
+                strokeWidth={strokeWidthThick}
+                fill='none'
+              />
+              <line
+                x1={inner.start.x}
+                y1={inner.start.y}
+                x2={outer.start.x}
+                y2={outer.start.y}
+                stroke='teal'
+                strokeWidth={strokeWidthThick}
+              />
+              <line
+                x1={inner.end.x}
+                y1={inner.end.y}
+                x2={outer.end.x}
+                y2={outer.end.y}
+                stroke='teal'
+                strokeWidth={strokeWidthThick}
+              />
+            </g>
           )
         })
       )}

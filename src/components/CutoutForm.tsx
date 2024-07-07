@@ -1,15 +1,28 @@
 import { FC, useState } from 'react'
-import { HStack, VStack, FormControl, FormLabel, useRadioGroup, Input, Heading } from '@chakra-ui/react'
+import {
+  HStack,
+  VStack,
+  FormControl,
+  FormLabel,
+  useRadioGroup,
+  Input,
+  Heading,
+  Slider,
+  SliderTrack,
+  SliderFilledTrack,
+  SliderThumb,
+  SliderMark,
+} from '@chakra-ui/react'
 import { useRecoilState } from 'recoil'
-import { cutoutTypeState, cutoutCircleParamsState } from '../recoil/atoms'
+import { cutoutTypeState, cutoutCircleParamsState, cutoutSpokeParamsState } from '../recoil/atoms'
 import RadioCard from './RarioCard'
 
-type CutoutType = 'None' | 'Circle' | 'Triangle'
+type CutoutType = 'None' | 'Circle' | 'Spoke'
 
 const cutoutTypes: { value: CutoutType, label: string }[] = [
   { value: 'None', label: 'なし' },
   { value: 'Circle', label: '円形' },
-  // { value: 'Triangle', label: '三角形' },
+  { value: 'Spoke', label: 'スポーク' },
 ]
 
 interface CutoutFormProps { }
@@ -17,6 +30,7 @@ interface CutoutFormProps { }
 const CutoutForm: FC<CutoutFormProps> = () => {
   const [cutoutType, setCutoutType] = useRecoilState(cutoutTypeState)
   const [cutoutCircleParams, setCutoutCircleParams] = useRecoilState(cutoutCircleParamsState)
+  const [cutoutSpokeParams, setCutoutSpokeParams] = useRecoilState(cutoutSpokeParamsState)
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: 'cutoutType',
@@ -51,15 +65,6 @@ const CutoutForm: FC<CutoutFormProps> = () => {
           <VStack spacing={2} align="center">
             <Heading size='sm' pb={2}>円形切り抜き</Heading>
             <HStack spacing={4} align="center" width='full'>
-              <FormLabel minWidth={40}>直径</FormLabel>
-              <ParamInput
-                numberType='float'
-                onChange={val => setCutoutCircleParams({ ...cutoutCircleParams, diameter: val })}
-                label='切り抜き円の直径[mm]'
-                value={cutoutCircleParams.diameter}
-              />
-            </HStack>
-            <HStack spacing={4} align="center" width='full'>
               <FormLabel minWidth={40}>個数</FormLabel>
               <ParamInput
                 numberType='int'
@@ -69,13 +74,85 @@ const CutoutForm: FC<CutoutFormProps> = () => {
               />
             </HStack>
             <HStack spacing={4} align="center" width='full'>
-              <FormLabel minWidth={40}>距離</FormLabel>
+              <FormLabel minWidth={40}>直径[mm]</FormLabel>
+              <ParamInput
+                numberType='float'
+                onChange={val => setCutoutCircleParams({ ...cutoutCircleParams, diameter: val })}
+                label='切り抜き円の直径[mm]'
+                value={cutoutCircleParams.diameter}
+              />
+            </HStack>
+            <HStack spacing={4} align="center" width='full'>
+              <FormLabel minWidth={40}>距離[mm]</FormLabel>
               <ParamInput
                 numberType='float'
                 onChange={val => setCutoutCircleParams({ ...cutoutCircleParams, distance: val })}
                 label='中心からの距離[mm]'
                 value={cutoutCircleParams.distance}
               />
+            </HStack>
+          </VStack>
+        </FormControl>
+      )}
+
+      {cutoutType === 'Spoke' && (
+        <FormControl id="cutoutCircle" bg='gray.100' p={4} borderRadius={4}>
+          <VStack spacing={2} align="center">
+            <Heading size='sm' pb={2}>スポーク状切り抜き</Heading>
+            <HStack spacing={4} align="center" width='full'>
+              <FormLabel minWidth={40}>個数</FormLabel>
+              <ParamInput
+                numberType='int'
+                onChange={val => setCutoutSpokeParams({ ...cutoutSpokeParams, count: val })}
+                label='切り抜きの個数'
+                value={cutoutSpokeParams.count}
+              />
+            </HStack>
+            <HStack spacing={4} align="center" width='full'>
+              <FormLabel minWidth={40}>内径[mm]</FormLabel>
+              <ParamInput
+                numberType='float'
+                onChange={val => setCutoutSpokeParams({ ...cutoutSpokeParams, innerRadius: val })}
+                label='内径[mm]'
+                value={cutoutSpokeParams.innerRadius}
+              />
+            </HStack>
+            <HStack spacing={4} align="center" width='full'>
+              <FormLabel minWidth={40}>外径[mm]</FormLabel>
+              <ParamInput
+                numberType='float'
+                onChange={val => setCutoutSpokeParams({ ...cutoutSpokeParams, outerRadius: val })}
+                label='外径[mm]'
+                value={cutoutSpokeParams.outerRadius}
+              />
+            </HStack>
+            <HStack spacing={4} align="center" width='full' mb={4}>
+              <FormLabel minWidth={40}>切り抜き率</FormLabel>
+              <Slider
+                value={cutoutSpokeParams.ratio}
+                min={0.1}
+                max={0.9}
+                step={0.05}
+                onChange={val => setCutoutSpokeParams({ ...cutoutSpokeParams, ratio: val })}
+                colorScheme='teal'
+              >
+                <SliderMark
+                  value={cutoutSpokeParams.ratio}
+                  textAlign='center'
+                  bg='teal'
+                  color='white'
+                  mt='3'
+                  ml='-5'
+                  w='12'
+                  borderRadius={8}
+                >
+                  {cutoutSpokeParams.ratio * 100}%
+                </SliderMark>
+                <SliderTrack>
+                  <SliderFilledTrack />
+                </SliderTrack>
+                <SliderThumb />
+              </Slider>
             </HStack>
           </VStack>
         </FormControl>
