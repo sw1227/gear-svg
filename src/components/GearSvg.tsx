@@ -99,41 +99,35 @@ const GearSvg: FC<GearSvgProps> = ({ showCircle }) => {
               fill="none"
             />
             {/* involute */}
-            {
-              Array.from({ length: INVOLUTE_RESOLUTION }, (_, j) => {
-                const angle = j * maxInvoluteAngle / INVOLUTE_RESOLUTION
-                const nextAngle = (j + 1) * maxInvoluteAngle / INVOLUTE_RESOLUTION
-                return (
-                  <line
-                    x1={baseRadius * (Math.cos(angle + offsetAngle) + angle * Math.sin(angle + offsetAngle))}
-                    y1={baseRadius * (Math.sin(angle + offsetAngle) - angle * Math.cos(angle + offsetAngle))}
-                    x2={baseRadius * (Math.cos(nextAngle + offsetAngle) + nextAngle * Math.sin(nextAngle + offsetAngle))}
-                    y2={baseRadius * (Math.sin(nextAngle + offsetAngle) - nextAngle * Math.cos(nextAngle + offsetAngle))}
-                    stroke="teal"
-                    strokeWidth={strokeWidthThick}
-                    key={`involute_${i}_${j}`}
-                  />
-                )
-              })
-            }
+            <path
+              d={
+                `M ${baseRadius * Math.cos(offsetAngle)} ${baseRadius * Math.sin(offsetAngle)}` +
+                Array.from({ length: INVOLUTE_RESOLUTION }, (_, j) => {
+                  const angle = (j + 1) * maxInvoluteAngle / INVOLUTE_RESOLUTION;
+                  const x = baseRadius * (Math.cos(angle + offsetAngle) + angle * Math.sin(angle + offsetAngle));
+                  const y = baseRadius * (Math.sin(angle + offsetAngle) - angle * Math.cos(angle + offsetAngle));
+                  return ` L ${x} ${y}`;
+                }).join('')
+              }
+              stroke="teal"
+              strokeWidth={strokeWidthThick}
+              fill="none"
+            />
             {/* Involute (another side) */}
-            {
-              Array.from({ length: INVOLUTE_RESOLUTION }, (_, j) => {
-                const angle = j * maxInvoluteAngle / INVOLUTE_RESOLUTION
-                const nextAngle = (j + 1) * maxInvoluteAngle / INVOLUTE_RESOLUTION
-                return (
-                  <line
-                    x1={baseRadius * (Math.cos(offsetAngle2 - angle) - angle * Math.sin(offsetAngle2 - angle))}
-                    y1={baseRadius * (Math.sin(offsetAngle2 - angle) + angle * Math.cos(offsetAngle2 - angle))}
-                    x2={baseRadius * (Math.cos(offsetAngle2 - nextAngle) - nextAngle * Math.sin(offsetAngle2 - nextAngle))}
-                    y2={baseRadius * (Math.sin(offsetAngle2 - nextAngle) + nextAngle * Math.cos(offsetAngle2 - nextAngle))}
-                    stroke="teal"
-                    strokeWidth={strokeWidthThick}
-                    key={`involute_${i}_${j}`}
-                  />
-                )
-              })
-            }
+            <path
+              d={
+                `M ${baseRadius * Math.cos(offsetAngle2)} ${baseRadius * Math.sin(offsetAngle2)}` +
+                Array.from({ length: INVOLUTE_RESOLUTION }, (_, j) => {
+                  const angle = (j + 1) * maxInvoluteAngle / INVOLUTE_RESOLUTION;
+                  const x = baseRadius * (Math.cos(offsetAngle2 - angle) - angle * Math.sin(offsetAngle2 - angle));
+                  const y = baseRadius * (Math.sin(offsetAngle2 - angle) + angle * Math.cos(offsetAngle2 - angle));
+                  return ` L ${x} ${y}`;
+                }).join('')
+              }
+              stroke="teal"
+              strokeWidth={strokeWidthThick}
+              fill="none"
+            />
           </g>
         )
       })}
