@@ -1,7 +1,7 @@
 import { FC, useState, useEffect, useRef } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import './App.css'
-import { Box, Button, Heading, VStack, Text } from '@chakra-ui/react'
+import { Box, Button, Heading, VStack, Text, Card, CardHeader, CardBody, CardFooter, Flex, StackDivider } from '@chakra-ui/react'
 import GearSvg from './components/GearSvg.tsx'
 import TeethNumberForm from './components/TeethNumberForm.tsx'
 import ModuleForm from './components/ModuleForm.tsx'
@@ -73,48 +73,54 @@ const App: FC = () => {
 
   return (
     <>
-      <Box p={4}>
-        <Heading mb={4}>Parameters</Heading>
-        <VStack spacing={4}>
-          {/* Number of teeth */}
-          <TeethNumberForm teethValue={teethNumber} onChange={setTeethNumber} />
-          {/* Module [mm] */}
-          <ModuleForm moduleValue={module} onChange={setModule} />
-          {/* Pressure angle [deg] */}
-          <PressureAngleForm pressureAngleValue={pressureAngleDegree} onChange={setPressureAngleDegree} />
-        </VStack>
+      <Flex>
+        <VStack width='480px' p={4} spacing={8} divider={<StackDivider />}>
 
-        <Heading mt={8}>Options</Heading>
-        <VStack spacing={4}>
-          <HoleDiameterForm onChange={setHoleDiameter}/>
-          <VisibilityForm visibilityValue={showCircle} onChange={setShowCircle} />
-        </VStack>
-
-        <Heading mt={4}>Rendered Gear</Heading>
-
-        <Box mt={4}>
-          <VStack spacing={2}>
-            <Text>歯先直径 = {2 * tipRadius} [mm]</Text>
-            <Text>ピッチ円直径 = {pitchDiameter} [mm]</Text>
+          <VStack width='full' spacing={4}>
+            <Heading mb={4} size='md'>Parameters</Heading>
+            {/* Number of teeth */}
+            <TeethNumberForm teethValue={teethNumber} onChange={setTeethNumber} />
+            {/* Module [mm] */}
+            <ModuleForm moduleValue={module} onChange={setModule} />
+            {/* Pressure angle [deg] */}
+            <PressureAngleForm pressureAngleValue={pressureAngleDegree} onChange={setPressureAngleDegree} />
           </VStack>
-        </Box>
 
-        {/* Download button */}
-        <Button onClick={handleDownload} mt={4}>Download SVG</Button>
+          <VStack width='full' spacing={4}>
+            <Heading size='md'>Options</Heading>
+            <HoleDiameterForm onChange={setHoleDiameter} />
+            <VisibilityForm visibilityValue={showCircle} onChange={setShowCircle} />
+          </VStack>
 
-        <Box ref={svgContainerRef} display="flex" justifyContent="center" boxSizing='border-box'>
-          {/* svg to draw a gear */}
-          <svg
-            ref={svgRef}
-            xmlns="http://www.w3.org/2000/svg"
-            width={svgSize}
-            height={svgSize}
-            viewBox={`-${tipRadius + svgMargin} -${tipRadius + svgMargin} ${(tipRadius + svgMargin) * 2} ${(tipRadius + svgMargin) * 2}`}
-          >
-            <GearSvg showCircle={showCircle} />
-          </svg>
+        </VStack>
+        <Box flex='1'>
+          <Card>
+            <CardHeader><Heading size='md'>Rendered Gear</Heading></CardHeader>
+            <CardBody>
+              <Box ref={svgContainerRef} display='flex' justifyContent='center' boxSizing='border-box'>
+                {/* svg to draw a gear */}
+                <svg
+                  ref={svgRef}
+                  xmlns='http://www.w3.org/2000/svg'
+                  width={svgSize}
+                  height={svgSize}
+                  viewBox={`-${tipRadius + svgMargin} -${tipRadius + svgMargin} ${(tipRadius + svgMargin) * 2} ${(tipRadius + svgMargin) * 2}`}
+                >
+                  <GearSvg showCircle={showCircle} />
+                </svg>
+              </Box>
+            </CardBody>
+            <CardFooter display="flex" justifyContent="center" alignItems="center">
+              <VStack spacing={2}>
+                <Text>歯先直径 = {2 * tipRadius} [mm]</Text>
+                <Text>ピッチ円直径 = {pitchDiameter} [mm]</Text>
+                {/* Download button */}
+                <Button onClick={handleDownload} mt={4}>Download SVG</Button>
+              </VStack>
+            </CardFooter>
+          </Card>
         </Box>
-      </Box>
+      </Flex>
     </>
   )
 }

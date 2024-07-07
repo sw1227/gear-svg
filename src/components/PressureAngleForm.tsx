@@ -61,7 +61,7 @@ const RadioCard: FC<RadioCardProps> = (props) => {
         }}
         px={4}
         py={2}
-        minWidth="120px"
+        minWidth="110px"
       >
         {props.children}
       </Box>
