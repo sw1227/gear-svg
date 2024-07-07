@@ -1,13 +1,14 @@
 import { FC, useState, useEffect, useRef } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import './App.css'
-import { Box, Button, Heading, VStack, Text, Card, CardHeader, CardBody, CardFooter, Flex, StackDivider } from '@chakra-ui/react'
+import { Box, Button, Heading, VStack, Text, Card, CardBody, Flex, StackDivider } from '@chakra-ui/react'
 import GearSvg from './components/GearSvg.tsx'
 import TeethNumberForm from './components/TeethNumberForm.tsx'
 import ModuleForm from './components/ModuleForm.tsx'
 import PressureAngleForm from './components/PressureAngleForm.tsx'
 import HoleDiameterForm from './components/HoleDiameterForm.tsx'
 import VisibilityForm from './components/VisibilityForm.tsx'
+import CutoutForm from './components/CutoutForm.tsx'
 import {
   teethNumberState,
   moduleState,
@@ -89,8 +90,12 @@ const App: FC = () => {
 
               <VStack width='full' spacing={4}>
                 <Heading size='md'>Options</Heading>
+                {/* Center hole diameter [mm] */}
                 <HoleDiameterForm onChange={setHoleDiameter} />
+                {/* Show base/pitch/tip/root circle or not */}
                 <VisibilityForm visibilityValue={showCircle} onChange={setShowCircle} />
+                {/* Cutouts */}
+                <CutoutForm />
               </VStack>
 
             </VStack>

@@ -9,6 +9,8 @@ import {
   tipRadiusState,
   rootRadiusState,
   maxInvoluteAngleState,
+  cutoutTypeState,
+  cutoutCircleParamsState,
 } from '../recoil'
 
 // Involute function (angle: radian)
@@ -23,12 +25,22 @@ const GearSvg: FC<GearSvgProps> = ({ showCircle }) => {
 
   const [teethNumber] = useRecoilState(teethNumberState)
   const [holeDiameter] = useRecoilState(holeDiameterState)
+  const [cutoutType] = useRecoilState(cutoutTypeState)
+  const [cutoutCircleParams] = useRecoilState(cutoutCircleParamsState)
   const pressureAngle = useRecoilValue(pressureAngleState)
   const pitchRadius = useRecoilValue(pitchRadiusState)
   const baseRadius = useRecoilValue(baseRadiusState)
   const tipRadius = useRecoilValue(tipRadiusState)
   const rootRadius = useRecoilValue(rootRadiusState)
   const maxInvoluteAngle = useRecoilValue(maxInvoluteAngleState)
+
+  const isCutoutCircleParamsNonNull = (
+    param: { diameter: number | null, count: number | null, distance: number | null }
+  ): param is { diameter: number, count: number, distance: number } => (
+    param.diameter !== null &&
+    param.count !== null &&
+    param.distance !== null
+  )
 
   // Stroke width: proportional to tip radius
   const strokeWidthThick = tipRadius / 150
@@ -45,8 +57,25 @@ const GearSvg: FC<GearSvgProps> = ({ showCircle }) => {
           <circle cx="0" cy="0" r={rootRadius} fill="none" stroke="#ddd" strokeWidth={strokeWidthThin} />
         </g>
       )}
-      {/* Hole */}
+      {/* Center Hole */}
       {holeDiameter && <circle cx="0" cy="0" r={holeDiameter / 2} fill="none" stroke="teal" strokeWidth={strokeWidthThick} />}
+      {/* Other Holes */}
+      {cutoutType === 'Circle' && isCutoutCircleParamsNonNull(cutoutCircleParams) && (
+        Array.from({ length: cutoutCircleParams.count }, (_, i) => {
+          const angle = 2 * i * Math.PI / cutoutCircleParams.count
+          return (
+            <circle
+              key={`cutout_circle_${i}`}
+              cx={cutoutCircleParams.distance * Math.cos(angle)}
+              cy={cutoutCircleParams.distance * Math.sin(angle)}
+              r={cutoutCircleParams.diameter / 2}
+              fill='none'
+              stroke='teal'
+              strokeWidth={strokeWidthThick}
+            />
+          )
+        })
+      )}
       {/* Involute */}
       {Array.from({ length: teethNumber }, (_, i) => {
         const offsetAngle = 2 * i * Math.PI / teethNumber

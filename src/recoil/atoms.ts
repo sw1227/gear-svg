@@ -19,3 +19,13 @@ export const holeDiameterState = atom<number | null>({
   key: 'holeDiameterState',
   default: null // null means no hole
 })
+
+export const cutoutTypeState = atom<'None' | 'Circle' | 'Triangle'>({
+  key: 'cutoutTypeState',
+  default: 'None'
+})
+
+export const cutoutCircleParamsState = atom<{ diameter: number | null, count: number | null, distance: number | null }>({
+  key: 'cutoutCircleParamsState',
+  default: { diameter: null, count: null, distance: null },
+})
