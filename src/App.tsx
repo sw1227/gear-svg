@@ -74,51 +74,50 @@ const App: FC = () => {
   return (
     <>
       <Flex>
-        <VStack width='480px' p={4} spacing={8} divider={<StackDivider />}>
-
-          <VStack width='full' spacing={4}>
-            <Heading mb={4} size='md'>Parameters</Heading>
-            {/* Number of teeth */}
-            <TeethNumberForm teethValue={teethNumber} onChange={setTeethNumber} />
-            {/* Module [mm] */}
-            <ModuleForm moduleValue={module} onChange={setModule} />
-            {/* Pressure angle [deg] */}
-            <PressureAngleForm pressureAngleValue={pressureAngleDegree} onChange={setPressureAngleDegree} />
-          </VStack>
-
-          <VStack width='full' spacing={4}>
-            <Heading size='md'>Options</Heading>
-            <HoleDiameterForm onChange={setHoleDiameter} />
-            <VisibilityForm visibilityValue={showCircle} onChange={setShowCircle} />
-          </VStack>
-
-        </VStack>
-        <Box flex='1'>
-          <Card>
-            <CardHeader><Heading size='md'>Rendered Gear</Heading></CardHeader>
-            <CardBody>
-              <Box ref={svgContainerRef} display='flex' justifyContent='center' boxSizing='border-box'>
-                {/* svg to draw a gear */}
-                <svg
-                  ref={svgRef}
-                  xmlns='http://www.w3.org/2000/svg'
-                  width={svgSize}
-                  height={svgSize}
-                  viewBox={`-${tipRadius + svgMargin} -${tipRadius + svgMargin} ${(tipRadius + svgMargin) * 2} ${(tipRadius + svgMargin) * 2}`}
-                >
-                  <GearSvg showCircle={showCircle} />
-                </svg>
-              </Box>
-            </CardBody>
-            <CardFooter display="flex" justifyContent="center" alignItems="center">
-              <VStack spacing={2}>
-                <Text>歯先直径 = {2 * tipRadius} [mm]</Text>
-                <Text>ピッチ円直径 = {pitchDiameter} [mm]</Text>
-                {/* Download button */}
-                <Button onClick={handleDownload} mt={4}>Download SVG</Button>
+        <Card>
+          <CardBody>
+            <VStack width='480px' p={4} spacing={8} divider={<StackDivider />}>
+              <VStack width='full' spacing={4}>
+                <Heading mb={4} size='md'>Parameters</Heading>
+                {/* Number of teeth */}
+                <TeethNumberForm teethValue={teethNumber} onChange={setTeethNumber} />
+                {/* Module [mm] */}
+                <ModuleForm moduleValue={module} onChange={setModule} />
+                {/* Pressure angle [deg] */}
+                <PressureAngleForm pressureAngleValue={pressureAngleDegree} onChange={setPressureAngleDegree} />
               </VStack>
-            </CardFooter>
-          </Card>
+
+              <VStack width='full' spacing={4}>
+                <Heading size='md'>Options</Heading>
+                <HoleDiameterForm onChange={setHoleDiameter} />
+                <VisibilityForm visibilityValue={showCircle} onChange={setShowCircle} />
+              </VStack>
+
+            </VStack>
+          </CardBody>
+        </Card>
+        <Box flex='1'>
+          <Heading size='md'>Rendered Gear</Heading>
+          <Box ref={svgContainerRef} display='flex' justifyContent='center' boxSizing='border-box'>
+            {/* svg to draw a gear */}
+            <svg
+              ref={svgRef}
+              xmlns='http://www.w3.org/2000/svg'
+              width={svgSize}
+              height={svgSize}
+              viewBox={`-${tipRadius + svgMargin} -${tipRadius + svgMargin} ${(tipRadius + svgMargin) * 2} ${(tipRadius + svgMargin) * 2}`}
+            >
+              <GearSvg showCircle={showCircle} />
+            </svg>
+          </Box>
+
+          <VStack spacing={2}>
+            <Text>歯先直径 = {2 * tipRadius} [mm]</Text>
+            <Text>ピッチ円直径 = {pitchDiameter} [mm]</Text>
+            {/* Download button */}
+            <Button onClick={handleDownload} mt={4}>Download SVG</Button>
+          </VStack>
+
         </Box>
       </Flex>
     </>
