@@ -13,8 +13,8 @@ import {
   SliderThumb,
   SliderMark,
 } from '@chakra-ui/react'
-import { useRecoilState } from 'recoil'
-import { cutoutTypeState, cutoutCircleParamsState, cutoutSpokeParamsState } from '../recoil/atoms'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { cutoutTypeState, cutoutCircleParamsState, cutoutSpokeParamsState, pitchRadiusState } from '../recoil'
 import RadioCard from './RarioCard'
 
 type CutoutType = 'None' | 'Circle' | 'Spoke'
@@ -31,11 +31,33 @@ const CutoutForm: FC<CutoutFormProps> = () => {
   const [cutoutType, setCutoutType] = useRecoilState(cutoutTypeState)
   const [cutoutCircleParams, setCutoutCircleParams] = useRecoilState(cutoutCircleParamsState)
   const [cutoutSpokeParams, setCutoutSpokeParams] = useRecoilState(cutoutSpokeParamsState)
+  const pitchRadius = useRecoilValue(pitchRadiusState)
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: 'cutoutType',
     value: cutoutType,
     onChange: (val) => {
+      // Set initial parameters proportional to pitch radius if null
+      if (val === 'Circle') {
+        const newParams = { ...cutoutCircleParams }
+        if (cutoutCircleParams.distance === null) {
+          newParams.distance = Math.floor(pitchRadius / 2)
+        }
+        if (cutoutCircleParams.diameter === null) {
+          newParams.diameter = Math.floor(pitchRadius / 5)
+        }
+        setCutoutCircleParams(newParams)
+      }
+      if (val === 'Spoke') {
+        const newParams = { ...cutoutSpokeParams }
+        if (cutoutSpokeParams.innerRadius === null) {
+          newParams.innerRadius = Math.floor(pitchRadius * 0.3)
+        }
+        if (cutoutSpokeParams.outerRadius === null) {
+          newParams.outerRadius = Math.floor(pitchRadius * 0.7)
+        }
+        setCutoutSpokeParams(newParams)
+      }
       setCutoutType(val as CutoutType)
     },
   })

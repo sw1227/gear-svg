@@ -26,12 +26,12 @@ export const cutoutTypeState = atom<'None' | 'Circle' | 'Spoke'>({
 })
 
 export const cutoutCircleParamsState = atom<{
-  diameter: number | null,
   count: number | null,
+  diameter: number | null,
   distance: number | null,
 }>({
   key: 'cutoutCircleParamsState',
-  default: { diameter: null, count: null, distance: null },
+  default: { count: 6, diameter: null, distance: null },
 })
 
 export const cutoutSpokeParamsState = atom<{
@@ -41,5 +41,5 @@ export const cutoutSpokeParamsState = atom<{
   ratio: number,
 }>({
   key: 'cutoutSpokeParamsState',
-  default: { count: null, innerRadius: null, outerRadius: null, ratio: 0.6 }
+  default: { count: 6, innerRadius: null, outerRadius: null, ratio: 0.6 }
 })
