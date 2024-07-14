@@ -28,6 +28,7 @@ const App: FC = () => {
 
   // Svg margin: proportional to tip radius
   const svgMargin = tipRadius / 10
+  const viewBoxSize = (tipRadius + svgMargin) * 2
 
   // Circle visibility
   const [showCircle, setShowCircle] = useState<boolean>(true)
@@ -54,10 +55,14 @@ const App: FC = () => {
   }, []);
 
   // For svg download
-  const svgRef = useRef(null)
+  const svgRef = useRef<SVGSVGElement | null>(null)
   const handleDownload = () => {
     const svgElement = svgRef.current
     if (!svgElement) return
+
+    // set width, height to viewBox size
+    svgElement.setAttribute('width', `${viewBoxSize}mm`)
+    svgElement.setAttribute('height', `${viewBoxSize}mm`)
     const serializer = new XMLSerializer()
     const svgString = serializer.serializeToString(svgElement)
     const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' })
@@ -70,6 +75,10 @@ const App: FC = () => {
     a.click()
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
+
+    // restore width, height
+    svgElement.setAttribute('width', `${svgSize}`)
+    svgElement.setAttribute('height', `${svgSize}`)
   };
 
   return (
@@ -110,7 +119,7 @@ const App: FC = () => {
               xmlns='http://www.w3.org/2000/svg'
               width={svgSize}
               height={svgSize}
-              viewBox={`-${tipRadius + svgMargin} -${tipRadius + svgMargin} ${(tipRadius + svgMargin) * 2} ${(tipRadius + svgMargin) * 2}`}
+              viewBox={`-${viewBoxSize / 2} -${viewBoxSize / 2} ${viewBoxSize} ${viewBoxSize}`}
             >
               <GearSvg showCircle={showCircle} />
             </svg>
